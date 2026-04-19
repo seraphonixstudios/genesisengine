@@ -1,0 +1,4 @@
+      <MatrixRain />
+      <div className="max-headroom-scanlines" />
+      <div className="max-headroom-static" />
+      <BrandingHeader />

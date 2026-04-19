@@ -1,0 +1,355 @@
+/* VIDEO GAME HUD - Cyberpunk/Matrix/Atlantean/Max Headroom UI Theme */
+/* With Login Page */
+
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --neon-cyan: #00f5ff;
+  --neon-pink: #ff00ff;
+  --matrix-green: #00ff41;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Rajdhani', 'Roboto', sans-serif;
+  background: #000;
+  color: #e0f7ff;
+}
+
+/* LOGIN PAGE STYLES */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: 
+    radial-gradient(ellipse at center, rgba(0, 20, 40, 0.9) 0%, rgba(0, 0, 0, 1) 100%),
+    linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 50px 50px, 50px 50px;
+  position: relative;
+}
+
+.login-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+  pointer-events: none;
+}
+
+.login-card {
+  background: linear-gradient(135deg, rgba(0, 20, 40, 0.98) 0%, rgba(10, 10, 30, 0.99) 100%) !important;
+  border: 2px solid rgba(0, 245, 255, 0.5) !important;
+  clip-path: polygon(0 0, calc(100% - 30px) 0, 100% 30px, 100% 100%, 30px 100%, 0 calc(100% - 30px)) !important;
+  box-shadow: 
+    0 0 50px rgba(0, 245, 255, 0.3),
+    inset 0 0 60px rgba(0, 245, 255, 0.05) !important;
+  max-width: 450px !important;
+  width: 90% !important;
+  position: relative;
+}
+
+.login-card::before,
+.login-card::after {
+  content: '';
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  border: 2px solid var(--neon-cyan);
+}
+
+.login-card::before {
+  top: 15px;
+  left: 15px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.login-card::after {
+  bottom: 15px;
+  right: 15px;
+  border-left: none;
+  border-top: none;
+}
+
+.login-logo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+  animation: logoPulse 2s infinite;
+}
+
+@keyframes logoPulse {
+  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 20px #00f5ff); }
+  50% { transform: scale(1.1); filter: drop-shadow(0 0 40px #00f5ff) drop-shadow(0 0 60px #ff00ff); }
+}
+
+.login-title {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.3em !important;
+  color: var(--neon-cyan) !important;
+  text-align: center !important;
+  margin-bottom: 8px !important;
+  text-shadow: 
+    0 0 10px var(--neon-cyan),
+    0 0 20px var(--neon-cyan),
+    0 0 40px var(--neon-cyan);
+}
+
+.login-label {
+  font-family: 'Share Tech Mono', monospace !important;
+  font-size: 0.8rem !important;
+  color: var(--neon-cyan) !important;
+  margin-bottom: 8px !important;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.1em;
+}
+
+.login-input {
+  background: rgba(0, 0, 0, 0.6) !important;
+  border: 2px solid rgba(0, 245, 255, 0.4) !important;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)) !important;
+}
+
+.login-input .MuiOutlinedInput-root {
+  color: #e0f7ff !important;
+  font-family: 'Share Tech Mono', monospace !important;
+}
+
+.login-input .MuiOutlinedInput-root fieldset {
+  border: none !important;
+}
+
+.login-input:hover {
+  border-color: var(--neon-cyan) !important;
+  box-shadow: 0 0 20px rgba(0, 245, 255, 0.3);
+}
+
+.login-button {
+  margin-top: 16px !important;
+  padding: 16px !important;
+  font-size: 1rem !important;
+  letter-spacing: 0.2em !important;
+}
+
+.text-button {
+  font-family: 'Orbitron', sans-serif !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+}
+
+/* MAIN APP STYLES */
+.game-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: 
+    linear-gradient(90deg, rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(rgba(0, 245, 255, 0.03) 1px, transparent 1px),
+    radial-gradient(ellipse at center, rgba(0, 20, 40, 0.9) 0%, rgba(0, 0, 0, 1) 100%);
+  background-size: 50px 50px, 50px 50px, 100% 100%;
+}
+
+.scanlines {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15) 1px, transparent 1px, transparent 2px);
+  pointer-events: none;
+}
+
+.crt-flicker {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9999;
+  background: rgba(0, 255, 65, 0.02);
+  opacity: 0;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 0.02; }
+  50% { opacity: 0.05; }
+}
+
+.hud-app { min-height: 100vh; position: relative; }
+
+.hud-header {
+  background: linear-gradient(180deg, rgba(0, 10, 20, 0.98) 0%, rgba(0, 20, 40, 0.95) 50%, rgba(0, 10, 20, 0.9) 100%) !important;
+  border-bottom: 3px solid var(--neon-cyan);
+  box-shadow: 0 0 30px rgba(0, 245, 255, 0.4), inset 0 -1px 0 rgba(0, 245, 255, 0.3);
+}
+
+.hud-title {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 1.8rem !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.15em !important;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  text-shadow: 0 0 10px var(--neon-cyan), 0 0 20px var(--neon-cyan), 0 0 40px var(--neon-cyan), 3px 3px 0 var(--neon-pink);
+}
+
+.hud-logo-icon {
+  font-size: 40px !important;
+  color: var(--neon-cyan);
+  animation: pulse 2s infinite;
+  filter: drop-shadow(0 0 10px var(--neon-cyan));
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; filter: drop-shadow(0 0 10px var(--neon-cyan)); transform: scale(1); }
+  50% { opacity: 0.8; filter: drop-shadow(0 0 20px var(--neon-cyan)) drop-shadow(0 0 40px var(--neon-pink)); transform: scale(1.05); }
+}
+
+.hud-status {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.hud-status-item {
+  background: rgba(0, 20, 40, 0.8);
+  border: 1px solid var(--neon-cyan);
+  padding: 8px 16px;
+  font-family: 'Share Tech Mono';
+  font-size: 0.75rem;
+  color: var(--neon-cyan);
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+
+.hud-status-item::before {
+  content: '◆';
+  margin-right: 8px;
+  color: var(--neon-pink);
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.hud-tabs {
+  background: linear-gradient(180deg, rgba(0, 20, 40, 0.8) 0%, rgba(0, 10, 20, 0.9) 100%);
+  border-top: 1px solid rgba(0, 245, 255, 0.2);
+  padding: 0 32px;
+}
+
+.hud-tab {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.15em !important;
+  color: rgba(224, 247, 255, 0.5) !important;
+  min-height: 56px !important;
+  text-transform: uppercase;
+}
+
+.hud-tab.Mui-selected {
+  color: var(--neon-cyan) !important;
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 245, 255, 0.1) 50%, rgba(0, 245, 255, 0.2) 100%);
+}
+
+.hud-main { padding: 24px 32px 100px 32px; max-width: 1600px; margin: 0 auto; }
+
+.hud-panel {
+  background: linear-gradient(135deg, rgba(0, 20, 40, 0.95) 0%, rgba(10, 10, 30, 0.98) 100%);
+  border: 2px solid rgba(0, 245, 255, 0.3);
+  clip-path: polygon(0 0, calc(100% - 20px) 0, 100% 20px, 100% 100%, 20px 100%, 0 calc(100% - 20px));
+  box-shadow: 0 0 30px rgba(0, 245, 255, 0.1), inset 0 0 60px rgba(0, 245, 255, 0.05);
+}
+
+.hud-section-title {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 0.9rem !important;
+  font-weight: 700 !important;
+  color: var(--neon-cyan);
+  text-transform: uppercase;
+  border-bottom: 2px solid rgba(0, 245, 255, 0.3);
+  padding-bottom: 12px;
+  margin-bottom: 20px !important;
+}
+
+.hud-button {
+  font-family: 'Orbitron', sans-serif !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  padding: 12px 24px !important;
+  border: 2px solid var(--neon-cyan) !important;
+  background: rgba(0, 20, 40, 0.8) !important;
+  color: var(--neon-cyan) !important;
+  clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px)) !important;
+}
+
+.hud-button.primary {
+  background: linear-gradient(135deg, var(--neon-cyan), #00a8b3) !important;
+  color: #000 !important;
+  box-shadow: 0 0 30px rgba(0, 245, 255, 0.5) !important;
+}
+
+.hud-input {
+  background: rgba(0, 0, 0, 0.6) !important;
+  border: 2px solid rgba(0, 245, 255, 0.3) !important;
+  clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)) !important;
+}
+
+.hud-display {
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px dashed rgba(0, 245, 255, 0.3);
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hud-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(0deg, rgba(0, 10, 20, 0.98) 0%, rgba(0, 20, 40, 0.95) 100%);
+  border-top: 2px solid var(--neon-cyan);
+  padding: 12px 32px;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+}
+
+.hud-footer-text {
+  font-family: 'Share Tech Mono' !important;
+  font-size: 0.7rem !important;
+  color: rgba(0, 245, 255, 0.7);
+  letter-spacing: 0.15em;
+}
+
+.hud-footer-stat {
+  font-family: 'Share Tech Mono';
+  font-size: 0.7rem;
+  color: var(--neon-cyan);
+}
+
+.hud-footer-stat span {
+  color: var(--neon-pink);
+  font-weight: 600;
+}

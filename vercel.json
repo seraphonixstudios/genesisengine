@@ -1,0 +1,22 @@
+{
+  "version": 2,
+  "name": "genesis-engine-client",
+  "builds": [
+    {
+      "src": "client/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ],
+  "env": {
+    "VITE_API_URL": "@genesis_api_url"
+  }
+}

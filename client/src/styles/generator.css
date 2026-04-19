@@ -1,0 +1,202 @@
+/* Image Generator Specific Styles */
+
+.provider-selector {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.provider-chip {
+  transition: all 0.2s ease;
+}
+
+.provider-chip:hover {
+  transform: translateY(-2px);
+}
+
+.provider-chip.active {
+  background: linear-gradient(135deg, #00d4ff 0%, #0095b3 100%);
+  color: white;
+}
+
+.model-selector {
+  margin-top: 12px;
+}
+
+.style-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.style-preset-chip {
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.style-preset-chip:hover {
+  transform: scale(1.05);
+}
+
+.style-preset-chip.selected {
+  background: linear-gradient(135deg, #ff00ff 0%, #b300b3 100%);
+  color: white;
+}
+
+.category-section {
+  margin-bottom: 20px;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.category-icon {
+  font-size: 20px;
+}
+
+.category-name {
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.style-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.style-tag {
+  font-size: 0.8rem;
+}
+
+.settings-panel {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.setting-row {
+  margin-bottom: 16px;
+}
+
+.setting-label {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.setting-value {
+  font-weight: 600;
+  color: #00d4ff;
+}
+
+.resolution-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.resolution-chip {
+  text-align: center;
+}
+
+.resolution-chip.selected {
+  background: #00d4ff;
+  color: #000;
+}
+
+.seed-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.seed-input {
+  flex: 1;
+}
+
+.randomize-button {
+  min-width: 40px;
+}
+
+.generate-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.batch-options {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.enhance-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.generate-button-wrapper {
+  position: relative;
+}
+
+.generate-button-wrapper.loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 960px) {
+  .resolution-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .style-preset-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .resolution-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .batch-options {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

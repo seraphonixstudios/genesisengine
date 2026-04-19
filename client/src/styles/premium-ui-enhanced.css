@@ -1,0 +1,25 @@
+
+/* Premium UI Enhanced Styles */
+:root {
+  --bg-primary: #0f172a;
+  --bg-secondary: #1e293b;
+  --text-primary: #f8fafc;
+  --text-secondary: #cbd5e1;
+  --accent-primary: #6366f1;
+  --gradient-primary: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+}
+
+[data-theme="light"] {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #f1f5f9;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+}
+
+.theme-switcher { display: flex; gap: 0.5rem; }
+.theme-btn { 
+  width: 32px; 
+  height: 32px; 
+  border-radius: 50%;
+  cursor: pointer;
+}

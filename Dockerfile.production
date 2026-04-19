@@ -1,0 +1,80 @@
+# Production Dockerfile - Minimal image size with all security hardening
+FROM node:20-alpine AS dependencies
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm install --legacy-peer-deps --omit=dev
+
+
+# Builder stage
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    cairo-dev \
+    pango-dev \
+    jpeg-dev \
+    giflib-dev \
+    librsvg-dev
+
+COPY --from=dependencies /app/node_modules ./node_modules
+COPY package*.json ./
+COPY prisma ./prisma
+COPY server.js .
+COPY src ./src
+
+RUN npm run db:generate
+
+
+# Final production stage - scratch alternative for minimal size
+FROM node:20-alpine
+
+WORKDIR /app
+
+LABEL maintainer="AI Image Generator"
+LABEL description="Production: Standalone AI Image Generator"
+LABEL version="5.0.0"
+
+# Install runtime dependencies only
+RUN apk add --no-cache \
+    ca-certificates \
+    python3 \
+    cairo \
+    pango \
+    jpeg \
+    giflib \
+    librsvg \
+    wget \
+    dumb-init
+
+# Create non-root user with no login shell
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S -D -H nodejs -u 1001 -G nodejs
+
+COPY --from=builder --chown=nodejs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nodejs:nodejs /app/package*.json ./
+COPY --from=builder --chown=nodejs:nodejs /app/prisma ./prisma
+COPY --from=builder --chown=nodejs:nodejs /app/server.js .
+COPY --from=builder --chown=nodejs:nodejs /app/src ./src
+
+RUN mkdir -p /app/uploads /app/logs && \
+    chown -R nodejs:nodejs /app && \
+    npm cache clean --force && \
+    rm -rf /tmp/* /var/tmp/* /var/cache/apk/*
+
+USER nodejs
+
+EXPOSE 5000
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD wget -q --spider http://localhost:5000/api/health || exit 1
+
+# Use dumb-init to properly handle signals
+ENTRYPOINT ["/usr/bin/dumb-init", "--"]
+CMD ["node", "server.js"]

@@ -1,0 +1,102 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String        @id @default(uuid())
+  email         String        @unique
+  password      String
+  name          String
+  avatar        String?
+  credits       Int           @default(50)
+  plan          Plan          @default(FREE)
+  role          Role          @default(USER)
+  emailVerified Boolean       @default(false)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  
+  generations   Generation[]
+  payments      Payment[]
+  apiKeys       ApiKey[]
+  
+  @@map("users")
+}
+
+model Generation {
+  id             String           @id @default(uuid())
+  userId         String
+  prompt         String
+  negativePrompt String?
+  model          String
+  width          Int
+  height         Int
+  steps          Int
+  guidanceScale  Float
+  stylePreset    String?
+  status         GenerationStatus @default(PENDING)
+  url            String?
+  thumbnailUrl   String?
+  seed           Int?
+  duration       Float?
+  cost           Int              @default(1)
+  error          String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  
+  user User @relation(fields: [userId], references: [id])
+  
+  @@index([userId])
+  @@index([createdAt])
+  @@map("generations")
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  userId    String
+  amount    Int
+  currency  String   @default("USD")
+  status    String
+  stripeId  String?
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("payments")
+}
+
+model ApiKey {
+  id        String   @id @default(uuid())
+  userId    String
+  key       String   @unique
+  name      String
+  lastUsed  DateTime?
+  createdAt DateTime @default(now())
+  
+  user User @relation(fields: [userId], references: [id])
+  
+  @@map("api_keys")
+}
+
+enum Plan {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum GenerationStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}

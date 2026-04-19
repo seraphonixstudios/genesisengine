@@ -1,0 +1,72 @@
+# Dependencies and package files
+node_modules/
+package-lock.json
+npm-debug.log
+
+# Build artifacts
+dist/
+*.tsbuildinfo
+client/build/
+client/dist/
+
+# Environment variables (keep .env.example)
+.env
+.env.local
+.env.*.local
+
+# IDE and editor files
+.vscode/
+.idea/
+.code-workspace
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Test and log files
+tests/
+coverage/
+*.log
+logs/
+playwright-report/
+test-results/
+
+# Version control
+.git/
+.gitignore
+.gitattributes
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.circleci/
+
+# Database and temporary
+prisma/migrations/
+*.sqlite
+*.sqlite3
+.db
+
+# Documentation (keep for reference, exclude from image)
+README*.md
+DEPLOYMENT*.md
+*.md
+COMPLETE*.md
+TEST*.md
+
+# Scripts
+*.sh
+*.bat
+*.ps1
+deploy/
+deploy*.zip
+
+# Development
+venv/
+__pycache__/
+.vscode/settings.json
+
+# Other
+node_modules/
+.next/

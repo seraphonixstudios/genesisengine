@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Image Generator Pro | Seraphonix x Sovereign Verily</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: #000;
+            color: #00ff00;
+            font-family: 'Rajdhani', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        /* Matrix Rain Canvas */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.8;
+        }
+        
+        /* Scanlines */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 9998;
+            animation: flicker 0.15s infinite;
+        }
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            92% { opacity: 1; }
+            93% { opacity: 0.98; }
+        }
+        
+        /* Static Noise */
+        .static {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9997;
+            opacity: 0.06;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+        }
+        
+        /* Branding Header */
+        .branding {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 1000;
+            background: linear-gradient(180deg, rgba(0,0,0,0.95) 0%, transparent 100%);
+        }
+        
+        .brand-logo {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .brand-logo img {
+            height: 45px;
+            filter: drop-shadow(0 0 10px rgba(255, 193, 7, 0.8));
+            transition: filter 0.3s;
+        }
+        
+        .brand-logo img:hover {
+            filter: drop-shadow(0 0 15px rgba(255, 193, 7, 1));
+        }
+        
+        .brand-text {
+            color: #ffc107;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.55rem;
+            letter-spacing: 0.1em;
+            margin-top: 3px;
+            text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+        }
+        
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 90px 20px 40px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Glitch Title */
+        .glitch-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            text-align: center;
+            color: #00ff00;
+            text-shadow: 
+                0 0 10px #00ff00,
+                0 0 20px #00ff00,
+                0 0 40px #00ff00;
+            margin-bottom: 10px;
+            position: relative;
+            animation: glitch-skew 3s infinite linear alternate-reverse;
+        }
+        
+        @keyframes glitch-skew {
+            0% { transform: skew(0deg); }
+            20% { transform: skew(-2deg); }
+            40% { transform: skew(2deg); }
+            60% { transform: skew(-1deg); }
+            80% { transform: skew(1deg); }
+            100% { transform: skew(0deg); }
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #00aa00;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+        
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        
+        @media (max-width: 900px) {
+            .grid { grid-template-columns: 1fr; }
+        }
+        
+        /* Cards */
+        .card {
+            background: rgba(0, 20, 0, 0.9);
+            border: 1px solid #00ff00;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+        }
+        
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            color: #00ff00;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        /* Textarea */
+        textarea {
+            width: 100%;
+            min-height: 120px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            color: #00ff00;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            padding: 15px;
+            resize: vertical;
+            outline: none;
+        }
+        
+        textarea:focus {
+            box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+        }
+        
+        textarea::placeholder {
+            color: #008800;
+        }
+        
+        /* Buttons */
+        .button-row {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .btn-enhance {
+            background: transparent;
+            border: 2px solid #ff00ff;
+            color: #ff00ff;
+        }
+        
+        .btn-enhance:hover {
+            background: rgba(255, 0, 255, 0.1);
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+        
+        .btn-generate {
+            background: linear-gradient(45deg, #00ff00, #00aa00);
+            color: #000;
+            flex: 1;
+        }
+        
+        .btn-generate:hover {
+            background: linear-gradient(45deg, #00ff00, #00ff00);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Progress Bar */
+        .progress-container {
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .progress-container.active {
+            display: block;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(0, 255, 0, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, #ff00ff);
+            animation: progress 2s infinite;
+            width: 100%;
+        }
+        
+        @keyframes progress {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 10px;
+            color: #00ff00;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+        }
+        
+        /* Output Area */
+        .output-area {
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px dashed rgba(0, 255, 0, 0.3);
+            border-radius: 8px;
+            padding: 20px;
+        }
+        
+        .output-area.has-image {
+            border-style: solid;
+            border-color: #00ff00;
+        }
+        
+        .output-placeholder {
+            color: #008800;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        .generated-image {
+            max-width: 100%;
+            border-radius: 4px;
+            border: 2px solid #00ff00;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+        }
+        
+        .btn-download {
+            margin-top: 15px;
+            width: 100%;
+            background: #00ff00;
+            color: #000;
+        }
+        
+        .btn-download:hover {
+            background: #80ff80;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.6);
+        }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            border-top: 1px solid rgba(0, 255, 0, 0.2);
+        }
+        
+        .footer-branding {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .footer-text {
+            color: #ffc107;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+        }
+        
+        .footer-divider {
+            color: #00ff00;
+        }
+        
+        .copyright {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="matrix-canvas"></canvas>
+    <div class="scanlines"></div>
+    <div class="static"></div>
+    
+    <!-- Branding Header -->
+    <div class="branding">
+        <div class="brand-logo">
+            <img src="/seraphonix-logo.png" alt="Seraphonix Studios">
+            <div class="brand-text">SERAPHONIX STUDIOS</div>
+        </div>
+        <div class="brand-logo">
+            <img src="/sovereign-logo.png" alt="Sovereign Verily">
+            <div class="brand-text">SOVEREIGN VERILY</div>
+        </div>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="container">
+        <h1 class="glitch-title" id="glitch-title">NEURAL ART ENGINE</h1>
+        <p class="subtitle">AI-Powered Image Generation | Free Open Source Models</p>
+        
+        <div class="grid">
+            <!-- Left Column - Input -->
+            <div class="card">
+                <div class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#00ff00" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                    PROMPT INPUT
+                </div>
+                <textarea id="prompt-input" placeholder="Describe your image... (e.g., 'a cyberpunk city at night with neon lights')"></textarea>
+                
+                <div class="button-row">
+                    <button class="btn btn-enhance" id="enhance-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                        </svg>
+                        ENHANCE
+                    </button>
+                    <button class="btn btn-generate" id="generate-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="5 3 19 12 5 21 5 3"/>
+                        </svg>
+                        GENERATE
+                    </button>
+                </div>
+                
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill"></div>
+                    </div>
+                    <div class="progress-text">GENERATING YOUR MASTERPIECE...</div>
+                </div>
+            </div>
+            
+            <!-- Right Column - Output -->
+            <div class="card">
+                <div class="card-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#00ff00" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    VISUAL OUTPUT
+                </div>
+                <div class="output-area" id="output-area">
+                    <div class="output-placeholder">Your generated image will appear here</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <div class="footer-branding">
+            <span class="footer-text">SERAPHONIX STUDIOS</span>
+            <span class="footer-divider">✦</span>
+            <span class="footer-text">SOVEREIGN VERILY</span>
+        </div>
+        <div class="copyright">© 2026 Seraphonix Studios x Sovereign Verily. All rights reserved.</div>
+    </div>
+    
+    <script>
+        // Matrix Rain Effect
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        const katakana = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズブヅプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴッン';
+        const latin = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*';
+        const alphabet = katakana + latin;
+        
+        const fontSize = 16;
+        const columns = canvas.width / fontSize;
+        const rainDrops = [];
+        
+        for (let x = 0; x < columns; x++) {
+            rainDrops[x] = Math.random() * -100;
+        }
+        
+        const drawMatrix = () => {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.02)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            ctx.fillStyle = '#00ff00';
+            ctx.font = 'bold ' + fontSize + 'px monospace';
+            ctx.shadowColor = '#00ff00';
+            ctx.shadowBlur = 20;
+            
+            for (let i = 0; i < rainDrops.length; i++) {
+                const text = alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+                
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+        };
+        
+        setInterval(drawMatrix, 30);
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Glitch Effect on Title
+        const glitchTitle = document.getElementById('glitch-title');
+        const originalText = 'NEURAL ART ENGINE';
+        const glitchChars = '!@#$%^&*()_+-=[]{}|;:,.<>?';
+        
+        setInterval(() => {
+            let glitched = '';
+            for (let i = 0; i < originalText.length; i++) {
+                if (Math.random() > 0.9 && originalText[i] !== ' ') {
+                    glitched += glitchChars[Math.floor(Math.random() * glitchChars.length)];
+                } else {
+                    glitched += originalText[i];
+                }
+            }
+            glitchTitle.textContent = glitched;
+            setTimeout(() => {
+                glitchTitle.textContent = originalText;
+            }, 100);
+        }, 3000);
+        
+        // API Functions
+        const API_BASE = window.location.origin;
+        const promptInput = document.getElementById('prompt-input');
+        const enhanceBtn = document.getElementById('enhance-btn');
+        const generateBtn = document.getElementById('generate-btn');
+        const progressContainer = document.getElementById('progress-container');
+        const outputArea = document.getElementById('output-area');
+        
+        enhanceBtn.addEventListener('click', async () => {
+            const prompt = promptInput.value.trim();
+            if (!prompt) {
+                alert('Please enter a prompt first!');
+                return;
+            }
+            
+            enhanceBtn.disabled = true;
+            enhanceBtn.innerHTML = 'ENHANCING...';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/enhance-prompt`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt })
+                });
+                
+                const data = await response.json();
+                if (data.enhancedPrompt) {
+                    promptInput.value = data.enhancedPrompt;
+                }
+            } catch (error) {
+                console.error('Enhancement error:', error);
+            }
+            
+            enhanceBtn.disabled = false;
+            enhanceBtn.innerHTML = `
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                </svg>
+                ENHANCE
+            `;
+        });
+        
+        generateBtn.addEventListener('click', async () => {
+            const prompt = promptInput.value.trim();
+            if (!prompt) {
+                alert('Please enter a prompt first!');
+                return;
+            }
+            
+            generateBtn.disabled = true;
+            progressContainer.classList.add('active');
+            outputArea.innerHTML = '<div class="output-placeholder">Initializing neural networks...</div>';
+            
+            try {
+                const response = await fetch(`${API_BASE}/api/generate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        prompt,
+                        provider: 'huggingface',
+                        model: 'RunDiffusion/Juggernaut-XL-v9'
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (data.url) {
+                    outputArea.classList.add('has-image');
+                    outputArea.innerHTML = `
+                        <div>
+                            <img src="${data.url}" alt="Generated" class="generated-image">
+                            <a href="${data.url}" download class="btn btn-download">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                DOWNLOAD
+                            </a>
+                        </div>
+                    `;
+                } else if (data.error) {
+                    outputArea.innerHTML = `<div class="output-placeholder" style="color: #ff0044;">Error: ${data.error}</div>`;
+                }
+            } catch (error) {
+                console.error('Generation error:', error);
+                outputArea.innerHTML = '<div class="output-placeholder" style="color: #ff0044;">Generation failed. Please check your API key configuration.</div>';
+            }
+            
+            generateBtn.disabled = false;
+            progressContainer.classList.remove('active');
+        });
+    </script>
+</body>
+</html>

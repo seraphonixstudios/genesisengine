@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  # ==========================================
+  # Genesis Engine Server
+  # ==========================================
+  genesis-engine:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: production
+    container_name: genesis-engine
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=production
+      - PORT=5000
+      - JWT_SECRET=${JWT_SECRET:-genesis-secret-key-change-me}
+      - HUGGINGFACE_API_KEY=${HUGGINGFACE_API_KEY}
+      - REPLICATE_API_TOKEN=${REPLICATE_API_TOKEN}
+      - STABILITY_API_KEY=${STABILITY_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - REDIS_URL=redis://redis:6379
+      - CORS_ORIGIN=http://localhost:3000
+    volumes:
+      - ./uploads:/app/uploads
+      - ./outputs:/app/outputs
+      - ./logs:/app/logs
+    depends_on:
+      - redis
+    networks:
+      - genesis-network
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:5000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # ==========================================
+  # Redis Cache & Queue
+  # ==========================================
+  redis:
+    image: redis:7-alpine
+    container_name: genesis-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - genesis-network
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+
+  # ==========================================
+  # Nginx Reverse Proxy (Production)
+  # ==========================================
+  nginx:
+    image: nginx:alpine
+    container_name: genesis-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./client/dist:/usr/share/nginx/html:ro
+    depends_on:
+      - genesis-engine
+    networks:
+      - genesis-network
+    profiles:
+      - production
+
+  # ==========================================
+  # Watchtower (Auto-update containers)
+  # ==========================================
+  watchtower:
+    image: containrrr/watchtower
+    container_name: genesis-watchtower
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - WATCHTOWER_POLL_INTERVAL=3600
+      - WATCHTOWER_CLEANUP=true
+      - WATCHTOWER_INCLUDE_STOPPED=true
+    profiles:
+      - production
+
+volumes:
+  redis-data:
+    driver: local
+  uploads:
+    driver: local
+  outputs:
+    driver: local
+
+networks:
+  genesis-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
