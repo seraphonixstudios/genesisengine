@@ -1194,3 +1194,610 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-muted);
 }
+
+/* ==========================================
+   MOBILE OPTIMIZATION - ANDROID & iOS
+   ========================================== */
+
+/* Prevent zoom on input focus for iOS */
+@media screen and (max-width: 768px) {
+  input, textarea, select, button {
+    font-size: 16px !important;
+    -webkit-appearance: none;
+    border-radius: 0;
+  }
+  
+  /* Touch-friendly tap targets */
+  .btn, .mode-btn, .style-card, .ratio-btn, .quality-btn, .control-type-btn {
+    min-height: 44px;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+  }
+
+  /* Full-width body */
+  body {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Container padding */
+  .genesis-engine-container {
+    padding: 12px;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* Header mobile */
+  .genesis-engine-header {
+    padding: 16px 12px;
+    margin-bottom: 16px;
+    border-radius: 12px;
+  }
+
+  .genesis-engine-header::before {
+    height: 3px;
+  }
+
+  .brand-logos {
+    flex-direction: column;
+    gap: 8px;
+    padding: 0;
+  }
+
+  .logo-left, .logo-right {
+    flex-direction: row;
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-label {
+    font-size: 0.65rem;
+  }
+
+  .genesis-engine-header h1 {
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+  }
+
+  .genesis-engine-header .subtitle {
+    font-size: 0.85rem;
+  }
+
+  .genesis-engine-header .tagline {
+    font-size: 0.7rem;
+    letter-spacing: 0.5px;
+  }
+
+  .connection-status {
+    font-size: 0.75rem;
+    margin-top: 8px;
+  }
+
+  /* Single column layout */
+  .generator-layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  /* Panels full-width */
+  .controls-panel, .results-panel {
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  /* Control sections */
+  .control-section {
+    margin-bottom: 16px;
+    padding-bottom: 16px;
+  }
+
+  .control-section h3 {
+    font-size: 0.95rem;
+    margin-bottom: 10px;
+  }
+
+  /* Mode selector - 3 columns + scroll */
+  .mode-selector {
+    display: flex;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scroll-snap-type: x mandatory;
+    gap: 6px;
+    padding-bottom: 4px;
+  }
+
+  .mode-selector::-webkit-scrollbar {
+    height: 2px;
+  }
+
+  .mode-btn {
+    flex: 0 0 auto;
+    min-width: 80px;
+    scroll-snap-align: start;
+    padding: 12px 10px;
+    font-size: 0.75rem;
+  }
+
+  .mode-btn span:first-child {
+    font-size: 1.2rem;
+  }
+
+  /* Style grid - 2 columns */
+  .style-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .style-card {
+    padding: 12px 8px;
+  }
+
+  .style-card .style-icon {
+    font-size: 1.4rem;
+  }
+
+  .style-card .style-name {
+    font-size: 0.75rem;
+  }
+
+  .style-card .style-desc {
+    font-size: 0.65rem;
+    display: none;
+  }
+
+  /* Ratio & quality - 3 columns */
+  .ratio-grid, .quality-selector {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .ratio-btn, .quality-btn {
+    padding: 10px 6px;
+  }
+
+  .ratio-btn .ratio-label, .quality-btn .quality-name {
+    font-size: 0.8rem;
+  }
+
+  .ratio-btn .ratio-dims, .quality-btn .quality-desc {
+    font-size: 0.65rem;
+  }
+
+  /* Form elements */
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group select,
+  .form-group textarea {
+    padding: 12px 14px;
+    font-size: 16px;
+  }
+
+  .prompt-input {
+    min-height: 80px;
+  }
+
+  /* Enhance section */
+  .enhance-section {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px;
+  }
+
+  /* Generate button */
+  .btn-generate {
+    padding: 14px 24px;
+    font-size: 1rem;
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
+    border-radius: 12px;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.6);
+  }
+
+  /* Results grid - 1 column */
+  .results-grid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .result-card {
+    border-radius: 12px;
+  }
+
+  .result-image-wrapper {
+    aspect-ratio: 1;
+  }
+
+  .result-overlay {
+    opacity: 0.3;
+    background: rgba(0,0,0,0.3);
+  }
+
+  .result-info {
+    padding: 12px;
+  }
+
+  .result-prompt {
+    font-size: 0.8rem;
+    -webkit-line-clamp: 3;
+  }
+
+  /* Gallery - 3 columns */
+  .gallery-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .gallery-section h3 {
+    font-size: 0.95rem;
+  }
+
+  /* Toast full-width on mobile */
+  .toast-container {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    gap: 8px;
+  }
+
+  .toast {
+    min-width: auto;
+    max-width: none;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    border-radius: 10px;
+  }
+
+  /* Progress */
+  .progress-track {
+    height: 6px;
+  }
+
+  .progress-text {
+    font-size: 0.7rem;
+  }
+
+  /* Empty state */
+  .empty-state, .generating-state {
+    padding: 40px 16px;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+  }
+
+  .empty-state p {
+    font-size: 1rem;
+  }
+
+  /* Control type grid */
+  .control-type-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .control-type-btn {
+    padding: 10px;
+  }
+
+  .control-type-btn span {
+    font-size: 0.8rem;
+  }
+
+  .control-type-btn small {
+    font-size: 0.7rem;
+  }
+
+  /* Slider bigger handle for touch */
+  .slider-group input[type="range"] {
+    height: 8px;
+  }
+
+  .slider-group input[type="range"]::-webkit-slider-thumb {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* Upload preview */
+  .uploaded-preview img {
+    max-height: 150px;
+  }
+
+  /* Active jobs */
+  .active-jobs {
+    padding: 12px;
+  }
+
+  .job-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 10px;
+  }
+}
+
+/* Small phones - 480px */
+@media screen and (max-width: 480px) {
+  .genesis-engine-container {
+    padding: 8px;
+  }
+
+  .genesis-engine-header {
+    padding: 12px 8px;
+  }
+
+  .genesis-engine-header h1 {
+    font-size: 1.2rem;
+  }
+
+  .mode-btn {
+    min-width: 65px;
+    padding: 10px 6px;
+    font-size: 0.7rem;
+  }
+
+  .mode-btn span:first-child {
+    font-size: 1rem;
+  }
+
+  .style-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 4px;
+  }
+
+  .style-card {
+    padding: 10px 6px;
+  }
+
+  .ratio-grid, .quality-selector {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+  }
+
+  .ratio-btn, .quality-btn {
+    padding: 8px 4px;
+  }
+
+  .results-grid {
+    gap: 8px;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+}
+
+/* Landscape phones */
+@media screen and (max-width: 900px) and (orientation: landscape) {
+  .generator-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .genesis-engine-header {
+    padding: 12px;
+  }
+
+  .genesis-engine-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .brand-logos {
+    flex-direction: row;
+  }
+}
+
+/* ==========================================
+   AUTH SCREENS MOBILE
+   ========================================== */
+@media screen and (max-width: 768px) {
+  .auth-container {
+    padding: 16px;
+    min-height: 100vh;
+    display: flex;
+    align-items: flex-start;
+    padding-top: 10vh;
+  }
+
+  .auth-card {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 24px 16px;
+  }
+
+  .auth-card h1 {
+    font-size: 1.5rem;
+  }
+
+  .auth-card p {
+    font-size: 0.9rem;
+  }
+
+  .auth-card .form-group input {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .auth-card .btn-full {
+    padding: 14px;
+    font-size: 1rem;
+    min-height: 48px;
+  }
+}
+
+/* ==========================================
+   APP NAVIGATION MOBILE
+   ========================================== */
+@media screen and (max-width: 768px) {
+  .app-nav {
+    padding: 10px 12px;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .nav-brand {
+    font-size: 0.85rem;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .nav-tagline {
+    display: none;
+  }
+
+  .nav-user {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
+    font-size: 0.75rem;
+  }
+
+  .daily-limit {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+  }
+
+  .credits, .user-name {
+    font-size: 0.75rem;
+  }
+
+  .nav-user .btn-sm {
+    padding: 6px 12px;
+    font-size: 0.7rem;
+  }
+}
+
+/* ==========================================
+   SAFE AREA SUPPORT (iPhone notch)
+   ========================================== */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .toast-container {
+    bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+  }
+
+  .btn-generate {
+    margin-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  body {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+}
+
+/* ==========================================
+   PRINT STYLES
+   ========================================== */
+@media print {
+  .controls-panel, .app-nav, .genesis-engine-header, .toast-container {
+    display: none !important;
+  }
+
+  .results-panel {
+    background: white;
+    color: black;
+  }
+}
+/* ==========================================
+   HAMBURGER MENU & MOBILE NAV
+   ========================================== */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  z-index: 100;
+}
+
+.hamburger .bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text-primary);
+  border-radius: 2px;
+  transition: var(--transition-fast);
+}
+
+.hamburger .bar.open:nth-child(1) {
+  transform: rotate(45deg) translate(4px, 4px);
+}
+
+.hamburger .bar.open:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger .bar.open:nth-child(3) {
+  transform: rotate(-45deg) translate(4px, -4px);
+}
+
+@media screen and (max-width: 768px) {
+  .hamburger {
+    display: flex;
+  }
+
+  .nav-user {
+    display: none;
+  }
+
+  .nav-user.mobile-open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 0 0 12px 12px;
+    padding: 16px;
+    z-index: 99;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .app-nav {
+    position: relative;
+  }
+}
+
+/* Auth branding */
+.auth-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.auth-icon {
+  font-size: 2rem;
+}
+
+/* Loading screen */
+.loading-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 16px;
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+}
+
+.loading-screen p {
+  font-size: 1rem;
+  color: var(--text-muted);
+}
