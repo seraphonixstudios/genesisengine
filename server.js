@@ -1273,6 +1273,21 @@ app.delete('/api/favorites/:id', validateToken, (req, res) => {
   res.json({ success: true, message: 'Removed from favorites' });
 });
 
+
+
+// ==========================================
+// ENHANCED GENESIS API v2 - Market-Standard Features
+// MUST be registered BEFORE SPA fallback
+// ==========================================
+
+try {
+  const { registerEnhancedEndpoints } = require('./enhanced-api.js');
+  registerEnhancedEndpoints(app);
+  console.log('[Server] Enhanced API v2 endpoints loaded');
+} catch (err) {
+  console.warn('[Server] Enhanced API v2 not available:', err.message);
+}
+
 // Serve uploads directory
 app.use('/uploads', express.static(uploadsDir));
 
@@ -1281,7 +1296,7 @@ const clientDistPath = path.join(__dirname, 'client', 'dist');
 if (fs.existsSync(clientDistPath)) {
   app.use(express.static(clientDistPath));
   
-  // SPA fallback
+  // SPA fallback - MUST be last
   app.get('*', (req, res) => {
     if (req.path.startsWith('/api/') || req.path.startsWith('/uploads/')) {
       return res.status(404).json({ error: 'Not found' });
